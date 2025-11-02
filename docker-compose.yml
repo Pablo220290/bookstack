@@ -1,0 +1,54 @@
+# bookstack/docker-compose.yml
+
+version: "3.8"
+
+services:
+  # 1. Servicio de la Aplicación Django
+  app:
+    # Construye la imagen usando el Dockerfile en el directorio actual (.)
+    build: .
+    # Le da un nombre amigable al contenedor
+    container_name: bookstack_app
+    # Mapea el puerto 8000 del host al 8000 del contenedor
+    ports:
+      - "8000:8000"
+    # Monta el código local en el contenedor para live-reload
+    volumes:
+      - .:/app
+    # Directorio de trabajo
+    working_dir: /app/src
+    # Comando para iniciar la app (sobrescribe el CMD del Dockerfile)
+    command: python manage.py runserver 0.0.0.0:8000
+    # Pasa las variables de entorno a settings.py
+    environment:
+      - SECRET_KEY=tu_secret_key_para_desarrollo
+      - DEBUG=True
+      - POSTGRES_DB=bookstack_db
+      - POSTGRES_USER=bookstack_user
+      - POSTGRES_PASSWORD=bookstack_pass
+      - POSTGRES_HOST=db
+    # Asegura que el servicio 'db' se inicie ANTES que 'app'
+    depends_on:
+      - db
+
+  # 2. Servicio de la Base de Datos PostgreSQL
+  db:
+    # Usa una imagen oficial de Postgres
+    image: postgres:15-alpine
+    container_name: bookstack_db
+    # Expone el puerto 5432
+    ports:
+      - "5432:5432"
+    # Monta un volumen para que los datos de la DB persistan
+    # si el contenedor se reinicia
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    # Variables de entorno para crear la DB y el usuario
+    environment:
+      - POSTGRES_DB=bookstack_db
+      - POSTGRES_USER=bookstack_user
+      - POSTGRES_PASSWORD=bookstack_pass
+
+# Define el volumen nombrado que usará la base de datos
+volumes:
+  postgres_data:

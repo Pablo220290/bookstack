@@ -1,0 +1,98 @@
+[
+  {
+    "model": "catalog.autor",
+    "pk": "8a3e7a6c-f19e-4a6c-9c3f-0a1b3f7f2d8e",
+    "fields": {
+      "first_name": "Gabriel",
+      "last_name": "García Márquez",
+      "biography": "Escritor, guionista, editor y periodista colombiano. En 1982 recibió el Premio Nobel de Literatura.",
+      "birth_date": "1927-03-06",
+      "created_at": "2025-11-01T18:00:00Z",
+      "updated_at": "2025-11-01T18:00:00Z"
+    }
+  },
+  {
+    "model": "catalog.autor",
+    "pk": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "fields": {
+      "first_name": "J.R.R.",
+      "last_name": "Tolkien",
+      "biography": "Escritor, poeta, filólogo y profesor universitario británico.",
+      "birth_date": "1892-01-03",
+      "created_at": "2025-11-01T18:00:00Z",
+      "updated_at": "2025-11-01T18:00:00Z"
+    }
+  },
+  {
+    "model": "catalog.autor",
+    "pk": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+    "fields": {
+      "first_name": "George",
+      "last_name": "Orwell",
+      "biography": "Novelista, periodista, ensayista y crítico británico.",
+      "birth_date": "1903-06-25",
+      "created_at": "2025-11-01T18:00:00Z",
+      "updated_at": "2025-11-01T18:00:00Z"
+    }
+  },
+  {
+    "model": "catalog.libro",
+    "pk": "1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed",
+    "fields": {
+      "title": "Cien años de soledad",
+      "summary": "La novela narra la historia de la familia Buendía a lo largo de siete generaciones en el pueblo ficticio de Macondo.",
+      "isbn": "9780307350444",
+      "publication_date": "1967-05-30",
+      "autores": [
+        "8a3e7a6c-f19e-4a6c-9c3f-0a1b3f7f2d8e"
+      ],
+      "created_at": "2025-11-01T18:00:00Z",
+      "updated_at": "2025-11-01T18:00:00Z"
+    }
+  },
+  {
+    "model": "catalog.libro",
+    "pk": "5cb8e3a8-0d1a-4f5d-9c3f-b3a1d4f2b1d9",
+    "fields": {
+      "title": "El Señor de los Anillos: La Comunidad del Anillo",
+      "summary": "La primera parte de la trilogía que sigue el viaje del hobbit Frodo Bolsón para destruir el Anillo Único.",
+      "isbn": "9780618640157",
+      "publication_date": "1954-07-29",
+      "autores": [
+        "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+      ],
+      "created_at": "2025-11-01T18:00:00Z",
+      "updated_at": "2025-11-01T18:00:00Z"
+    }
+  },
+  {
+    "model": "catalog.libro",
+    "pk": "e0a1b2c3-d4e5-f678-9012-3456789abcde",
+    "fields": {
+      "title": "1984",
+      "summary": "Una novela distópica sobre el totalitarismo y la vigilancia gubernamental.",
+      "isbn": "9780451524935",
+      "publication_date": "1949-06-08",
+      "autores": [
+        "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+      ],
+      "created_at": "2025-11-01T18:00:00Z",
+      "updated_at": "2025-11-01T18:00:00Z"
+    }
+  },
+  {
+    "model": "catalog.libro",
+    "pk": "f1a2b3c4-d5e6-f789-0123-456789abcdef",
+    "fields": {
+      "title": "El hobbit",
+      "summary": "Un viaje inesperado de un hobbit llamado Bilbo Bolsón.",
+      "isbn": "9780547928227",
+      "publication_date": "1937-09-21",
+      "autores": [
+        "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+      ],
+      "created_at": "2025-11-01T18:00:00Z",
+      "updated_at": "2025-11-01T18:00:00Z"
+    }
+  }
+]
