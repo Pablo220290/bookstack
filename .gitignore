@@ -1,0 +1,34 @@
+# 1. Entornos Virtuales
+# Ignora la carpeta del entorno virtual
+venv/
+.venv/
+env/
+*.env
+
+# 2. Archivos de Entorno 
+# Ignora los archivos que contienen contraseñas y secretos
+.env
+src/.env
+
+# 3. Caché de Python
+# Ignora los archivos de bytecode compilado y carpetas de caché
+*.pyc
+__pycache__/
+
+# 4. Archivos de Django
+# Ignora la base de datos de desarrollo por defecto
+db.sqlite3
+db.sqlite3-journal
+
+# Ignora las carpetas de archivos estáticos/media 
+/staticfiles/
+/media/
+
+# 5. Archivos de Docker
+# Ignora los datos persistentes de la base de datos de Docker
+postgres_data/
+
+# 6. Caché y configuraciones de IDE/OS
+.vscode/
+.idea/
+.DS_Store

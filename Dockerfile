@@ -11,7 +11,6 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /app
 
 # 4. Instalar dependencias
-# Copiamos solo el requirements.txt primero para aprovechar el caché de Docker
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 

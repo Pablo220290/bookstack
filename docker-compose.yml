@@ -17,7 +17,7 @@ services:
       - .:/app
     # Directorio de trabajo
     working_dir: /app/src
-    # Comando para iniciar la app (sobrescribe el CMD del Dockerfile)
+    # Comando para iniciar la app
     command: python manage.py runserver 0.0.0.0:8000
     # Pasa las variables de entorno a settings.py
     environment:
@@ -27,9 +27,12 @@ services:
       - POSTGRES_USER=bookstack_user
       - POSTGRES_PASSWORD=bookstack_pass
       - POSTGRES_HOST=db
-    # Asegura que el servicio 'db' se inicie ANTES que 'app'
+      - CACHE_URL=redis://redis:6379/1
+      - CELERY_BROKER_URL=redis://redis:6379/2
+    # Asegura que el servicio 'db' y 'redis' se inicien ANTES que 'app'
     depends_on:
       - db
+      - redis
 
   # 2. Servicio de la Base de Datos PostgreSQL
   db:
@@ -40,7 +43,6 @@ services:
     ports:
       - "5432:5432"
     # Monta un volumen para que los datos de la DB persistan
-    # si el contenedor se reinicia
     volumes:
       - postgres_data:/var/lib/postgresql/data
     # Variables de entorno para crear la DB y el usuario
@@ -49,6 +51,38 @@ services:
       - POSTGRES_USER=bookstack_user
       - POSTGRES_PASSWORD=bookstack_pass
 
-# Define el volumen nombrado que usará la base de datos
+  # --- Servicio de Caché Redis ---
+  redis:
+    image: redis:7-alpine
+    container_name: bookstack_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  # --- AÑADIDO: 3. Servicio del Trabajador Celery ---
+  worker:
+    build: .
+    container_name: bookstack_worker
+    volumes:
+      - .:/app
+    working_dir: /app/src
+    # Comando para iniciar el trabajador de Celery
+    command: celery -A config worker -l info
+    environment:
+      - SECRET_KEY=tu_secret_key_para_desarrollo
+      - DEBUG=True
+      - POSTGRES_DB=bookstack_db
+      - POSTGRES_USER=bookstack_user
+      - POSTGRES_PASSWORD=bookstack_pass
+      - POSTGRES_HOST=db
+      - CACHE_URL=redis://redis:6379/1
+      - CELERY_BROKER_URL=redis://redis:6379/2
+    depends_on:
+      - db
+      - redis
+
+# Define los volúmenes nombrados
 volumes:
   postgres_data:
+  redis_data:
