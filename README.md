@@ -1,6 +1,6 @@
 # 🚀 Bookstack API
 
-Boostack es una API RESTful robusta, escalable y de alto rendimiento, construida con Django y Django Rest Framework, que sigue las mejores prácticas de rendimiento seguridad y mantenibilidad.
+Boostrack es una API robusta, escalable y de alto rendimiento, construida con Django y Django Rest Framework, que sigue las mejores prácticas de rendimiento seguridad y mantenibilidad.
 
 ---
 
@@ -26,7 +26,7 @@ Este proyecto implementa:
 
 ---
 
-## 🏛️ Arquitectura
+## 🏛️ Nuestra Arquitectura
 
 El proyecto está organizado en una arquitectura de capas desacoplada:
 
@@ -71,54 +71,76 @@ El proyecto está organizado en una arquitectura de capas desacoplada:
 
 Este es el método recomendado. Levanta todos los servicios (app, db, redis, worker) automáticamente.
 
-**Requisitos:** Tener Docker y Docker Compose instalados.
+### Requisitos en la Máquina de Prueba
 
-1.  **Clonar el repositorio:**
+1.  **Git**
+2.  **Docker Desktop** (asegúrate de que esté **corriendo** antes de empezar).
+3.  **Git Bash** (en Windows, se instala con Git) para poder ejecutar el script `.sh`.
+
+### Pasos del Despliegue
+
+1.  **Abrir la Terminal Correcta:**
+
+    - **En Windows:** Abre **Git Bash** (¡No uses CMD o PowerShell!).
+    - **En Linux/macOS:** Abre tu terminal estándar.
+
+2.  **Clonar el repositorio:**
 
     ```bash
     git clone [https://github.com/Pablo220290/bookstack.git](https://github.com/Pablo220290/bookstack.git)
     cd bookstack
     ```
 
-2.  **Preparar el Script de Despliegue:**
-    (Solo necesitas hacer esto una vez para darle a Git permisos de ejecución).
-
-    _Si estás en **Windows** (usando Git Bash), ejecuta:_
-
-    ```bash
-    git update-index --chmod=+x deploy.sh
-    ```
-
-    _Si estás en **Linux/macOS**, ejecuta:_
-
-    ```bash
-    chmod +x deploy.sh
-    ```
-
 3.  **Ejecutar el script de despliegue:**
+    Este script construirá, iniciará, migrará y cargará los datos de la aplicación.
 
     ```bash
     ./deploy.sh
     ```
 
-    Este script automáticamente:
-
-    - Construirá las imágenes de Docker.
-    - Levantará los 4 contenedores (app, db, redis, worker).
-    - Esperará a que la DB esté lista.
-    - Ejecutará las migraciones (`migrate`).
-    - Cargará los datos iniciales (`loaddata initial_data`).
+    _Este proceso tardará varios minutos la primera vez mientras descarga las imágenes de Docker._
 
 4.  **Crear un Superusuario:**
-    La base de datos de Docker es nueva. Para poder obtener un token, debes crear un usuario:
+    Una vez que el script termine, la base de datos estará corriendo pero necesitarás un usuario.
 
-    ```bash
-    docker-compose exec app python manage.py createsuperuser
-    ```
+    - **En Linux/macOS:**
+      ```bash
+      docker-compose exec app python manage.py createsuperuser
+      ```
+    - **En Windows (Git Bash):**
+      El comando anterior puede fallar con un error de `TTY`. Usa `winpty` para solucionarlo:
+      ```bash
+      winpty docker-compose exec app python manage.py createsuperuser
+      ```
 
 5.  **¡Listo! Accede a la aplicación:**
     - **Documentación API (Swagger):** `http://localhost:8000/api/v1/schema/swagger-ui/`
     - **Django Admin:** `http://localhost:8000/admin/`
+
+---
+
+## ⚠️ Solución de Problemas Comunes (Troubleshooting)
+
+Si algo falla durante el despliegue, es probable que sea uno de estos problemas:
+
+- **ERROR: `service "app" is not running` (Al ejecutar `migrate` o `loaddata`)**
+
+  - **Causa:** El contenedor `app` o `worker` intentó iniciarse pero "crasheó" (se apagó) inmediatamente. Esto casi siempre es un `ImportError` (falta una librería en `requirements.txt`) o un error de sintaxis en el código de Python.
+  - **Solución:** Ejecuta `docker-compose up` (sin el `-d`) en tu terminal. Esto iniciará los contenedores en primer plano y te mostrará el _Traceback_ (el error de Python) que está causando el _crash_.
+
+- **ERROR: `bash: ./deploy.sh: No such file or directory` (El engañoso)**
+
+  - **Causa:** No es que el archivo no exista, sino que sus finales de línea son incorrectos. Git en Windows pudo haberlo clonado con finales de línea `CRLF` en lugar de `LF`.
+  - **Solución:** Este repositorio incluye un archivo `.gitattributes` que _debería_ prevenir esto. Si aun así ocurre, abre `deploy.sh` en VS Code, haz clic en **"CRLF"** en la barra inferior derecha, cámbialo a **"LF"** y guarda el archivo.
+
+- **ERROR: `open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified`**
+
+  - **Causa:** El motor de Docker no está corriendo.
+  - **Solución:** Inicia la aplicación **Docker Desktop** desde tu Menú Inicio y espera a que el ícono de la ballena se ponga verde.
+
+- **ERROR: `Superuser creation skipped due to not running in a TTY`**
+  - **Causa:** Estás usando Git Bash en Windows, que no maneja bien las sesiones interactivas de Docker.
+  - **Solución:** Añade `winpty` al inicio del comando: `winpty docker-compose exec app python manage.py createsuperuser`.
 
 ---
 
@@ -134,7 +156,7 @@ Accede a la [Documentación de Swagger](http://localhost:8000/api/v1/schema/swag
 4.  Copia el token `access`.
 5.  Haz clic en el botón verde **"Authorize"** en la parte superior derecha de Swagger.
 6.  En el diálogo `jwtAuth (Bearer)`, pega el `access` token (solo el token, sin prefijos).
-7.  ¡Listo! Ya puedes ejecutar peticiones en los endpoints protegidos. Si tu token de acceso expira, usa el `refresh` token en el endpoint `POST /api/v1/auth/token/refresh/` para obtener uno nuevo.
+7.  ¡Listo! Ya puedes ejecutar peticiones en los endpoints protegidos.
 
 ---
 
@@ -143,6 +165,5 @@ Accede a la [Documentación de Swagger](http://localhost:8000/api/v1/schema/swag
 Para ejecutar la suite completa de tests (unitarios y de integración):
 
 ```bash
-# Asegúrate de que tu entorno Docker esté corriendo
 docker-compose exec app python manage.py test catalog
 ```
