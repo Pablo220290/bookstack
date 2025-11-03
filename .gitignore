@@ -5,7 +5,7 @@ venv/
 env/
 *.env
 
-# 2. Archivos de Entorno 
+# 2. Los archivos de Entorno 
 # Ignora los archivos que contienen contraseñas y secretos
 .env
 src/.env

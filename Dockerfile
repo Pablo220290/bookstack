@@ -1,6 +1,6 @@
 # bookstack/Dockerfile
 
-# 1. Usar una imagen base ligera de Python
+# 1. Usar una imagen base ligera de Python para simplicidad
 FROM python:3.11-slim
 
 # 2. Configurar variables de entorno
